@@ -8,10 +8,15 @@ from functools import partial ## permet dans un bouton d'avoir une commande avec
 import scrollbarJerome  ##programme jerome permettant d'integrer une scrollbar H ou V  ,  à essayer d integrer
 from fenetreMultiplesStade import *
 
+## pour afficher les differents stades
+## sur une fenetre
+
 poules={}
 SelectDept=[]
 StadeEquipes = {}       ## creation d un dictionnaire pour enregistrer les equipes par stade
 listeEquipes =[]        ## pour créer des liste d' équipe par stade
+
+
 
 def importDeptSelect():
     fileDept = csv.reader(open('DeptSelect.csv', 'r'))
