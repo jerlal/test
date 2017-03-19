@@ -9,6 +9,7 @@ import scrollbarJerome  ##programme jerome permettant d'integrer une scrollbar H
 from fenetreMultiplesStade import *
 
 ## pour afficher les differents stades
+## sur une fenetre
 
 poules={}
 SelectDept=[]
