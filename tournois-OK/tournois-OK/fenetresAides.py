@@ -4,14 +4,16 @@
 ## regroupe toutes les fenetres aides
 
 from tkinter import *
+from functools import partial ## permet dans un bouton d'avoir une commande avec des variable
 
 def textPremierTour():
     texteAide="bonjour"
     return texteAide
     
-
-
-class aidePremierTour(Toplevel):
+  
+    
+    
+class aide(Toplevel):
     "Fenêtre satellite contenant l'aide"
     
  
@@ -20,33 +22,20 @@ class aidePremierTour(Toplevel):
         
         #self.geometry("300x400")  ## 
         self.transient(self.master)  ## bloque la fenêtre devant
-        self.resizable(width =1, height =1)    # => empêche le redimensionnement
+        self.resizable(width =1, height =1)    # => 0 empêche le redimensionnement
         self.title("aide")
-        textAide = "il faudra écrire ici les infos \n pour utiliser cette fenetre"  ## le texte à afficher est contenu dans la def textPourAide 
-              
-          
-        msg = Message(self, text = textPremierTour())
+               
+        msg = Message(self, text = self.texteAide)
         msg.config(fg='black', font=('times', 12, 'italic'), padx=10, pady=10)
         
-        msg.pack( )
+        msg.pack( )    
         
-class aideInscription(Toplevel):
-    "Fenêtre satellite contenant l'aide"
+class PremierTourAide(aide):
+    texteAide=("ceci est un texte pour aider à l'utilisation de  la fenêtre du premier tour")  
     
- 
-    def __init__(self,   **Arguments):
-        Toplevel.__init__(self,   **Arguments)
-        
-        #self.geometry("300x400")
-        self.transient(self.master)
-        #self.resizable(width =0, height =0)    # => empêche le redimensionnement
-        self.title("aide")
-        textAide = "il faudra écrire ici les infos \n pour aider à enregistrer les départements"  ## le texte à afficher est contenu dans la def textPourAide 
-              
-          
-        msg = Message(self, text = textAide)
-        msg.config(fg='black', font=('times', 12, 'italic'), padx=10, pady=10)
-        msg.pack( )
+
+class stadesAide(aide):
+    texteAide=("ceci est un texte pour aider à l'utilisation de  la fenêtre d' affichge des stades") 
 
 
 if __name__ =='__main__':
@@ -54,8 +43,12 @@ if __name__ =='__main__':
     fenetre = Tk() 
     fenetre.geometry("300x400")
     
-    
-    bouton3 = Button(fenetre, text='Aide', command=aidePremierTour)  
+    textAide = "il faudra écrire ici les infos \n pour aider à enregistrer les départements"  ## le texte à afficher est contenu dans la def textPourAide 
+    bouton3 = Button(fenetre, text='Aide premier tour', command=PremierTourAide)
+  
     bouton3.grid(row = 10, column = 10, ipadx=50, padx =0, pady =0, sticky =E)
+    bouton4 = Button(fenetre, text='Aide stades', command=stadesAide)
+  
+    bouton4.grid(row = 20, column = 10, ipadx=50, padx =0, pady =0, sticky =E)
     
     fenetre.mainloop()
