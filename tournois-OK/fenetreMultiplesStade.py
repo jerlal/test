@@ -1,11 +1,13 @@
 #!/usr/bin/env python3 
 # -*- coding: utf-8 -*- 
 
-##affichage d'une fenetre fille en cliquant sur un bouton
+##affichage d'une fenetre fille en cliquant sur un bouton stade
+
+## pour chaque stade, affiche toutes les combinaisons des matchs
 
 from functools import partial ## permet dans un bouton d'avoir une commande avec des variable
 from tkinter import * 
-
+from choixResultatMatch import *
 
 
 def poule (nbEquipeParPoule):
@@ -16,20 +18,70 @@ def poule (nbEquipeParPoule):
     
     
     if nbEquipeParPoule == 4:
-        match = cas['4equipes']          ## si 4 equipes dans la poule alors cette conbimnaison est choisie
+        match = cas['4equipes']          ## si 4 equipes dans la poule alors cette conbinaison est choisie
         
     else:
-        match = cas['5equipes']           ## si 5 equipes dans la poule alors cette conbimnaison est choisie
+        match = cas['5equipes']           ## si 5 equipes dans la poule alors cette conbinaison est choisie
         
     ##print(match)    
     return(match)                       ## retourne la liste comme valeur
     
- 
-def matchsDifferents( NumEquipe,listeEquipe):
+def fenetreRencontreMatch(equipe1,equipe2):
     
-    ## affiche les differents match en fonction du nombre d équipes dans chaque poule (variable)
+    #fenetre qui s'ouvre quant on clique sur le match correspondant
+    
+    #global fenetre_fille1 
+  
+    # ceci est une fenêtre fille1 (Toplevel) 
+    # elle sera automatiquement détruite lorsque vous quitterez le 
+    # programme en fermant la fenêtre principale 
+  
+    fenetre_fille1 = Toplevel() 
+    fenetre_fille1.title("resultats du match")     ## titre de la fenetre avec le nombre de stade
+    fenetre_fille1.transient(fenetre_fille)  ## bloque la fenetre devant
+    
+   
+    
+    #fenetre_fille1.geometry("600x150") ##Premier chiffre pour horizontale
+    fenetre_fille1.resizable(width=True, height=True)
+    ##fenetre_fille1.minsize("400x100")
+    ##fenetre_fille1.maxsize("600x200")
+    fenetre_fille1.config(bg="white")
+    tailleCaracT = "courier 12"
+    #var = IntVar()
+    
+    ## affichage titre
+    txt = Label(fenetre_fille1,text = "résultats de la rencontre")
+    txt.config(bd=2,fg="black",bg="white",font=tailleCaracT)
+    txt.grid(row = 0,column = 0,sticky=NSEW, columnspan=4)
+    
+    
+    
+    ##affichage équipe 
+    ligneEquipe1 = 2  ##utilisé pour positionner dans la fenetre
+    
+    fenetreAffichage = fenetre_fille1
+    
+    Frame5 = Frame(fenetre_fille1, bg="blue",borderwidth=1)
+    Frame5.grid(row=0,column = 0)
+    Frame5.rowconfigure(0, weight=100)
+    Frame5.columnconfigure(0, weight=100)
+    
+    affichage(Frame5,equipe1, equipe2, ligneEquipe1)
+    
+    Button(fenetre_fille1, text="Quitter", command=fenetre_fille1.destroy).grid(row=10) ##bouton de sortie de la fenetre 
+   
+      
+ 
+def matchsDifferentsVertical( NumEquipe,listeEquipe):
+    
+    ## affiche verticalement les differents match en fonction du nombre d équipes dans chaque poule (variable)
+    
     NbMatch= (len(NumEquipe))
-    i=0
+    i=0     # variable qui est utilisée pour appeler les equipes
+    col=0   # est utilisé pour positionner l'affichage des equipes les unes à coté des autres
+    ligne=0 # est utilisé pour afficher les equipes les unes sous les autres
+    
     print(NumEquipe)
     print("\n")
     print(listeEquipe)
@@ -40,16 +92,80 @@ def matchsDifferents( NumEquipe,listeEquipe):
         print(str(j)+" contre "+str(k))
         print((listeEquipe[j-1][0])+" contre "+(listeEquipe[k-1][0]))
         
-        
+        equipe1 = (listeEquipe[j-1][0])
+        equipe2 = (listeEquipe[(k-1)][0])
+        Button(fenetre_fille, text="resultat du match", command=partial(fenetreRencontreMatch, equipe1, equipe2)).grid(row=1+2*ligne, column=2+col) 
         ##Label(fenetre_fille, text="").pack(pady=0)
-        textAffichage = (str(listeEquipe[j-1][0])+" "+str(listeEquipe[j-1][3]))
-        Label(fenetre_fille, text= textAffichage).pack(pady=0, padx=0)
-        textAffichage = (str(listeEquipe[(k-1)][0])+" "+str(listeEquipe[(k-1)][3]))
-        Label(fenetre_fille, text= textAffichage).pack(pady=0, padx=0)
-        Label(fenetre_fille, text= " ").pack(pady=0, padx=0)
         
-        i+=2
-         
+        ##textAffichage = (str(listeEquipe[j-1][0])+" "+str(listeEquipe[j-1][3]))
+        textAffichage = str(equipe1)
+        Label(fenetre_fille, text= textAffichage).grid(row=2+2*ligne, column=2+col) 
+        
+        ##textAffichage = (str(listeEquipe[(k-1)][0])+" "+str(listeEquipe[(k-1)][3]))
+        textAffichage = str(equipe2)
+        Label(fenetre_fille, text= textAffichage).grid(row=3+2*ligne, column=2+col) 
+        Label(fenetre_fille, text= " ").grid(row=4+2*ligne, column=2+col) 
+        
+        i+=2  
+        
+        if col<=4:
+            col+=0      # si col+=0 alors l'affichage se fait l'un en dessous de l'autre
+            ligne+=2   # si ligne+=2 alors permet d'afficher les equipes les unes sous les autres
+ 
+ 
+            
+def matchsDifferentsHorizontal( NumEquipe,listeEquipe):
+    
+    ## affiche horizontalement les differents match en fonction du nombre d équipes dans chaque poule (variable)
+    
+    NbMatch= (len(NumEquipe))
+    i=0     # variable qui est utilisée pour appeler les equipes
+    col=0   # est utilisé pour positionner l'affichage des equipes les unes à coté des autres
+    ligne=0 # est utilisé pour afficher les equipes les unes sous les autres
+    
+    print(NumEquipe)
+    print("\n")
+    print(listeEquipe)
+    while i< NbMatch:
+        j=(NumEquipe[i])    ## selection de la première équipoe
+        k=NumEquipe[i+1]    ## sélection de la seconde equipe
+        
+        print(str(j)+" contre "+str(k))                                     ## pour voir dans une console si le choix est bon
+        print((listeEquipe[j-1][0])+" contre "+(listeEquipe[k-1][0]))       
+        
+        equipe1 = (listeEquipe[j-1][0])
+        equipe2 = (listeEquipe[(k-1)][0])
+        Button(fenetre_fille, text="resultat du match", command=partial(fenetreRencontreMatch, equipe1, equipe2)).grid(row=1+2*ligne, column=2+col) 
+        ##Label(fenetre_fille, text="").pack(pady=0)
+        
+        ##textAffichage = (str(listeEquipe[j-1][0])+" "+str(listeEquipe[j-1][3]))
+        textAffichage = str(equipe1)
+        Label(fenetre_fille, text= textAffichage).grid(row=2+2*ligne, column=2+col) 
+        
+        ##textAffichage = (str(listeEquipe[(k-1)][0])+" "+str(listeEquipe[(k-1)][3]))
+        textAffichage = str(equipe2)
+        Label(fenetre_fille, text= textAffichage).grid(row=3+2*ligne, column=2+col) 
+        Label(fenetre_fille, text= " ").grid(row=4+2*ligne, column=2+col) 
+        
+        i+=2  
+        col+=1
+        
+        if col>2:       ## 3 pour 4 colonnes car debut à la colonne 0
+            col = 0
+            ligne += 2
+        
+        
+            
+
+
+def matchsDifferents( NumEquipe,listeEquipe):
+    ## pour etre compatible avec le programme principal 
+    ## qui utilise matchsDifferents comme fonction
+    ## mettre matchsDifferentsHorizotal pour afficher horizontalement les matchs
+    
+    ## return matchsDifferentsVertical( NumEquipe,listeEquipe)
+    return matchsDifferentsHorizotal ( NumEquipe,listeEquipe)    
+    
     
 def nouvelle_fenetre (variable, StadeEquipes): 
     """ 
@@ -64,10 +180,12 @@ def nouvelle_fenetre (variable, StadeEquipes):
     # ceci est une fenêtre fille (Toplevel) 
     # elle sera automatiquement détruite lorsque vous quitterez le 
     # programme en fermant la fenêtre principale 
-  
+    nomStade = ("Stade "+str(variable))
     fenetre_fille = Toplevel() 
-    fenetre_fille.title(variable)     ## titre de la fenetre avec le nombre de stade
-    fenetre_fille.geometry("300x700")
+    fenetre_fille.title(nomStade)     ## titre de la fenetre avec le nombre de stade
+    #fenetre_fille.geometry("300x700")
+    #fenetre_fille.transient(fenetre) ## bloque la fenetre devant
+    
     #fenetre_fille.config(bg="white")
     
     equipes=StadeEquipes[variable]   ## mettre dans une liste 'equipes'' la liste du dico 'StadeEquipe' qui a la clée 'variable'    
@@ -81,10 +199,10 @@ def nouvelle_fenetre (variable, StadeEquipes):
     
     poule(nb)   ## utilise la def poule de rencontre.py pour definir l'ordre des matchs
     
-    matchsDifferents(poule(nb),equipes)
+    #matchsDifferentsVertical(poule(nb),equipes)
+    matchsDifferentsHorizontal(poule(nb),equipes)
     
-    
-    Button(fenetre_fille, text="Quitter", command=fenetre_fille.destroy).pack(pady=10) ##bouton de sortie de la fenetre
+    Button(fenetre_fille, text="Quitter", command=fenetre_fille.destroy).grid(row=20, column=10)  ##bouton de sortie de la fenetre
 
     
     
@@ -120,13 +238,13 @@ if __name__ == '__main__':
                              ['Seine-Saint-Denis', ' 93', ' Ile-de-France', [0], [0], [0]]]}
     ##fin des variables de test
                              
-    Label(fenetre, text="Cliquez sur le bouton").pack(pady=20, padx=10) 
+    Label(fenetre, text="Cliquez sur le bouton").grid(row=0, column=2) 
     
     ## pour la fonction command du bouton, partial permet d'avoir une variable
     ##il faut penser à faire l'import de functools au debut
      
-    Button(fenetre, text=stade, command=partial(nouvelle_fenetre, stade, StadeEquipes)).pack(pady=5, padx=10)  
-    Button(fenetre, text="Quitter", command=fenetre.destroy).pack(pady=5) 
+    Button(fenetre, text=stade, command=partial(nouvelle_fenetre, stade, StadeEquipes)).grid(row=2, column=2)  
+    Button(fenetre, text="Quitter", command=fenetre.destroy).grid(row=4, column=2)  
       
     # /!\ n'oubliez pas de finir avec la boucle principale /!\ 
       

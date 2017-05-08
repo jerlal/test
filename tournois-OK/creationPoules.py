@@ -33,7 +33,7 @@ def Battre(L):
         #"""Mélanger""" 
         return random.shuffle(L)    
 
-def creationPoule(nbequipe,listeMelange,listeEquipe,effectifPoule):
+def creationPoule(nbequipe,listeEquipe,effectifPoule):
     ##effectifPoule = 4
     StadeEquipes = {} 
     
@@ -43,7 +43,7 @@ def creationPoule(nbequipe,listeMelange,listeEquipe,effectifPoule):
     resteEquipe = nbequipe % effectifPoule    ## pour connaitre le nombre d'équipe qu'il reste 
                                             ## à repartir sur les derniers stade
                                             
-    ## definir le nome d'eqipes par stade
+    ## definir le nome d'equipes par stade
     
    ## À partir d'un liste de joueurs, determiner  combien de poules de 
     ##  il ne doit pas rester de poule avec moins de joueurs que le nombre defini
@@ -71,7 +71,7 @@ def creationPoule(nbequipe,listeMelange,listeEquipe,effectifPoule):
     k = 0 
     l = 0
     z = 0
-    #print("poule de ",effectifPoule," joueurs: ",int(nbPoule),"\n")
+    
     
     print ("il y a ",int(nbPoule)," poules de ",effectifPoule," joueurs")
     
@@ -140,39 +140,33 @@ def creationPoule(nbequipe,listeMelange,listeEquipe,effectifPoule):
     ## fin definition du nombre d'équipe par stade
                                             
     print("nombre d'équipe: ",nbequipe, "\n")
-    print("Liste mélangée: ",listeMelange,"\n")
+    print("Liste mélangée: ",listeEquipe,"\n")
     print("liste des equipes: ")
     print(str(listeEquipe)+"\n")
     print("liste du nombre d'equipe sur chaque stade: ",listePoule)
-    ##print("Effectif par poule (ou stades): ",effectifPoule)
-    
-    
-    ##print(" nombre de stade:  ",nbStade,"\n")
-    ##print ("reste sur dernier stade:  ",resteEquipe,"\n")
+   
     
     i=0     ## pour les boucles suivantes avec while
     w=0     ## pour les boucles suivantes avec while
     
-    ## peut etre déterminer ici le nombre d'equipe par stade
-    ## puis ensuite faire des boucles qui prenne le nombre d'équipe dans chaque poule
-    
-    ##while i< int(nbStade-resteEquipe):                  
+                     
     
     ## création d'un dictionnaire  avec des équipes sur chaque stade
     
     y = len(listePoule)     #compte le nombre de stade
     print(" NOMBRE DE STADE : ",y)                                                
     while i < y:                                                    
-        NumeroStade = ('Stade'+str(i+1))
+        ##NumeroStade = ('Stade'+str(i+1))
+        NumeroStade = (i+1) ## chaque stade a un numéro. 
+                            ## Cela facilite le classement par ordre
+                            ## dans d'autre partie du programme
         j = 0
-        ##for j in (range(0+w,effectifPoule+w)):
+        
         while j < (listePoule[i]):
-            NumEquipe = listeMelange[z]
-            ##print(NumEquipe)              ##pour verifier
-            #print(NumeroStade,NumEquipe)   ##pour verifier
+            
             
             ### creation liste equipe par stade
-            listeEquipesStade.append(listeEquipe[NumEquipe])
+            listeEquipesStade.append(listeEquipe[z])
         
             ###fin création liste equipe par stade
             z+=1
@@ -180,11 +174,13 @@ def creationPoule(nbequipe,listeMelange,listeEquipe,effectifPoule):
         ##print(NumeroStade,": ",listeEquipesStade) ##pour verifier
         
             
-        ### creation de dictionnaires pour enregistrer les differents stades
+        ## creation de dictionnaires pour enregistrer les differents stades
         StadeEquipes[NumeroStade] =  listeEquipesStade
-        ### fin creation dictionnaires
+        ## fin creation dictionnaires
+        
+        ## remise à zero de la listeEquipeStade pour la recréer pour le stade suivant
         listeEquipesStade=[]
-        #print ("liste des equipe sur le ",NumeroStade,": ",listeEquipesStade)
+        
         i+=1
         w+=effectifPoule
         
@@ -193,7 +189,19 @@ def creationPoule(nbequipe,listeMelange,listeEquipe,effectifPoule):
     return(StadeEquipes)
     
     
-   
+def classementCle (dico):
+    ## On récupère clés du dico (dico) pour les reclasser dans l'ordre 
+    ## puisqu'un dico n'est pas classé 
+    ## et on met ce classement dans une liste pour l'utiliser plus tard
+    ## on utilise la fonction return pour retourner cette liste de clés classées
+    
+    listeCle = {}
+    for cle in dico:
+    
+        listeCle[cle] = dico[cle]
+    listeCle = sorted(listeCle)
+    ##print(listeCle)   
+    return listeCle
 
 
 if __name__ == "__main__":
@@ -218,24 +226,24 @@ if __name__ == "__main__":
                                         
     Dept=SelectDept 
    
-    
-    
-    
-    
-    X = [i for i in range(0, NbEquipe)]  ## la séquence qui sera battue. Chiffre de 0 à Nombre d'équipe -1
-     
-    Battre(X)                           ## melange avec la def Battre créée au debut
-    
-    ## affichage pour info
     print("Les équipes: ",SelectDept)
     print("nb d'équipe sélectionnées:", len(SelectDept))
     print("réparties sur ", Col, "stades")
-    print("le melange:  ",X) 
+    
+    
+    
+    
+     
+    Battre(SelectDept)                           ## melange avec la def Battre créée au debut
+    
+    ## affichage pour info
+    
+    print("le melange:  ",SelectDept) 
     
       
-    StadeRepartition = creationPoule(NbEquipe, X, SelectDept, effectifPoule)  ## met le resultat des repartions par stade 
+    StadeRepartition = creationPoule(NbEquipe, SelectDept, effectifPoule)  ## met le resultat des repartions par stade 
                                                             ## dans une variable pour l'utiliser ensuite
     print("equipes par stade\n",StadeRepartition)
     
-    
+    print ("classement des stades:",classementCle (StadeRepartition))
     fenetre.mainloop()
